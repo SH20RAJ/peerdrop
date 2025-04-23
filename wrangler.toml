@@ -1,0 +1,17 @@
+name = "peerdrop"
+type = "webpack"
+account_id = "your-account-id"
+workers_dev = true
+
+[site]
+bucket = "./src"
+entry-point = "workers-site"
+
+[build]
+command = "npm run build"
+upload.format = "service-worker"
+
+[env.production]
+name = "peerdrop"
+route = "peerdrop.pages.dev/*"
+zone_id = "your-zone-id"

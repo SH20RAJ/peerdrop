@@ -8,215 +8,650 @@
     <link rel="stylesheet" href="styles/main.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
 </head>
-<body class="bg-light font-sans text-dark">
-    <header class="container mx-auto px-4 py-6 flex justify-between items-center">
-        <div class="flex items-center">
-            <svg class="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"></path>
-            </svg>
-            <h1 class="ml-2 text-2xl font-bold text-primary">PeerDrop</h1>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 font-sans text-dark min-h-screen">
+    <!-- Loading overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-dark bg-opacity-50 z-50 items-center justify-center hidden">
+        <div class="bg-white p-6 rounded-xl shadow-strong max-w-md w-full mx-4">
+            <div class="flex items-center justify-center space-x-3">
+                <svg class="animate-spin h-8 w-8 text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span class="text-lg font-medium">Establishing connection...</span>
+            </div>
         </div>
-        <nav>
-            <ul class="flex space-x-6">
-                <li><a href="#how-it-works" class="hover:text-primary transition-colors">How It Works</a></li>
-                <li><a href="#features" class="hover:text-primary transition-colors">Features</a></li>
-                <li><a href="https://github.com/yourusername/peerdrop" target="_blank" class="hover:text-primary transition-colors">GitHub</a></li>
+    </div>
+
+    <header class="sticky top-0 bg-white bg-opacity-95 backdrop-blur-lg shadow-soft z-10">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="bg-gradient-to-br from-primary-600 via-primary-500 to-primary-400 rounded-full p-2.5 shadow-md transform transition-transform hover:scale-105">
+                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <h1 class="ml-3 text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-400 text-transparent bg-clip-text">PeerDrop</h1>
+            </div>
+            <nav class="hidden md:block">
+                <ul class="flex space-x-8">
+                    <li><a href="#how-it-works" class="font-medium hover:text-primary-600 transition-colors relative group">How It Works<span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all group-hover:w-full"></span></a></li>
+                    <li><a href="#features" class="font-medium hover:text-primary-600 transition-colors relative group">Features<span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all group-hover:w-full"></span></a></li>
+                    <li><a href="https://github.com/yourusername/peerdrop" target="_blank" class="font-medium hover:text-primary-600 transition-colors relative group">GitHub<span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all group-hover:w-full"></span></a></li>
+                </ul>
+            </nav>
+            <button class="md:hidden focus:outline-none" id="mobile-menu-button">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+        <!-- Mobile menu, hidden by default -->
+        <div class="md:hidden hidden bg-white border-t border-gray-100 p-4" id="mobile-menu">
+            <ul class="space-y-4">
+                <li><a href="#how-it-works" class="block font-medium hover:text-primary-600 transition-colors">How It Works</a></li>
+                <li><a href="#features" class="block font-medium hover:text-primary-600 transition-colors">Features</a></li>
+                <li><a href="https://github.com/yourusername/peerdrop" target="_blank" class="block font-medium hover:text-primary-600 transition-colors">GitHub</a></li>
             </ul>
-        </nav>
+        </div>
     </header>
 
-    <main>
+    <main class="pt-8">
         <!-- Hero Section -->
-        <section class="container mx-auto px-4 py-16 text-center">
-            <h2 class="text-4xl md:text-5xl font-bold mb-6">Secure P2P File Sharing</h2>
-            <p class="text-xl mb-10 max-w-2xl mx-auto">Share files directly between devices with end-to-end encryption. No servers, no storage, no limits.</p>
-            
-            <div class="max-w-xl mx-auto bg-white rounded-lg shadow-lg p-6 mb-10">
-                <div id="drop-area" class="border-2 border-dashed border-gray-300 rounded-lg p-10 mb-6 flex flex-col items-center justify-center cursor-pointer hover:border-primary transition-colors">
-                    <svg class="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                    </svg>
-                    <p class="text-lg mb-2">Drag & drop files here</p>
-                    <p class="text-sm text-gray-500">or</p>
-                    <label for="file-input" class="mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer">
-                        Browse Files
-                    </label>
-                    <input type="file" id="file-input" class="hidden" multiple>
-                </div>
-                
-                <div id="file-info" class="hidden">
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <h3 id="file-name" class="font-medium"></h3>
-                            <p id="file-size" class="text-sm text-gray-500"></p>
+        <section class="relative overflow-hidden">
+            <!-- Background decorations -->
+            <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+                <div class="absolute top-0 right-0 w-1/3 h-1/3 bg-primary-50 rounded-full opacity-20 transform translate-x-1/4 -translate-y-1/4"></div>
+                <div class="absolute bottom-0 left-0 w-1/2 h-1/2 bg-secondary-50 rounded-full opacity-20 transform -translate-x-1/4 translate-y-1/4"></div>
+                <div class="absolute top-1/2 left-1/2 w-1/4 h-1/4 bg-primary-100 rounded-full opacity-20 transform -translate-x-1/2 -translate-y-1/2"></div>
+                <div class="hidden md:block absolute top-1/4 left-1/4 w-64 h-64 border border-primary-200 rounded-full opacity-20"></div>
+                <div class="hidden md:block absolute bottom-1/4 right-1/4 w-96 h-96 border border-secondary-200 rounded-full opacity-20"></div>
+            </div>
+
+            <div class="container mx-auto px-4 py-16 md:py-24 lg:py-32">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-12 md:gap-16">
+                    <div class="text-left md:w-1/2 max-w-2xl">
+                        <div class="inline-block px-4 py-1 bg-primary-50 rounded-full text-primary-700 font-medium text-sm mb-6 animate-pulse-slow">
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                End-to-End Encrypted
+                            </span>
                         </div>
-                        <button id="clear-file" class="text-red-500 hover:text-red-700">
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                            <span class="bg-gradient-to-r from-primary-600 via-primary-500 to-primary-400 text-transparent bg-clip-text">Secure P2P</span> File Sharing
+                        </h1>
+                        <p class="text-xl text-gray-700 mb-8 leading-relaxed">Share files directly between devices with end-to-end encryption. No servers, no storage, no limits.</p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="#file-sharing" class="px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-500 text-white font-medium rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 text-center group">
+                                <span class="flex items-center justify-center">
+                                    Start Sharing
+                                    <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </span>
+                            </a>
+                            <a href="#how-it-works" class="px-8 py-4 bg-white text-primary-600 font-medium rounded-xl shadow-md hover:shadow-lg border border-primary-100 transform hover:-translate-y-1 transition-all duration-200 text-center">
+                                Learn More
+                            </a>
+                        </div>
+                        <div class="mt-8 flex items-center text-gray-500 text-sm">
+                            <svg class="w-5 h-5 mr-2 text-secondary-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            No registration required, just drag & drop
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <div class="relative">
+                            <!-- Decorative elements -->
+                            <div class="absolute -top-6 -left-6 w-24 h-24 bg-primary-100 rounded-full z-0 animate-pulse-slow"></div>
+                            <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-secondary-100 rounded-full z-0 animate-pulse-slow"></div>
+
+                            <!-- Main image with glass effect -->
+                            <div class="relative z-10 bg-white/30 backdrop-blur-sm p-4 rounded-2xl shadow-strong border border-white/50">
+                                <img src="/assets/hero-image.svg" alt="Secure file sharing" class="w-full max-w-lg mx-auto rounded-xl">
+
+                                <!-- Floating badges -->
+                                <div class="absolute -top-4 -right-4 bg-white px-4 py-2 rounded-full shadow-md text-sm font-medium text-primary-700 flex items-center">
+                                    <svg class="w-4 h-4 mr-1 text-primary-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    Fast Transfer
+                                </div>
+                                <div class="absolute -bottom-4 -left-4 bg-white px-4 py-2 rounded-full shadow-md text-sm font-medium text-secondary-700 flex items-center">
+                                    <svg class="w-4 h-4 mr-1 text-secondary-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    Secure
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- File Sharing Section -->
+        <section id="file-sharing" class="py-20 relative overflow-hidden">
+            <!-- Background decorations -->
+            <div class="absolute inset-0 -z-10 opacity-10">
+                <div class="absolute top-1/4 right-1/4 w-64 h-64 border-2 border-primary-300 rounded-full"></div>
+                <div class="absolute bottom-1/4 left-1/4 w-96 h-96 border-2 border-secondary-300 rounded-full"></div>
+                <div class="absolute top-1/2 left-1/2 w-32 h-32 bg-primary-100 rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
+            </div>
+
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Share Files <span class="bg-gradient-to-r from-primary-600 to-primary-400 text-transparent bg-clip-text">Securely</span></h2>
+                    <p class="text-xl text-gray-600 max-w-2xl mx-auto">Your files never touch our servers. They're transferred directly to your recipient with end-to-end encryption.</p>
+                </div>
+
+                <div class="max-w-2xl mx-auto">
+                    <div class="bg-white rounded-2xl shadow-soft p-8 md:p-10 relative overflow-hidden backdrop-blur-sm border border-gray-100">
+                        <!-- Decorative elements -->
+                        <div class="absolute top-0 right-0 w-40 h-40 bg-primary-50 rounded-bl-full -z-10 opacity-70"></div>
+                        <div class="absolute bottom-0 left-0 w-40 h-40 bg-secondary-50 rounded-tr-full -z-10 opacity-70"></div>
+
+                        <!-- Security badge -->
+                        <div class="absolute top-4 right-4 bg-green-50 px-3 py-1 rounded-full text-green-700 text-xs font-medium flex items-center">
+                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            End-to-End Encrypted
+                        </div>
+
+                        <div id="drop-area" class="border-3 border-dashed border-gray-200 rounded-xl p-10 mb-8 flex flex-col items-center justify-center cursor-pointer hover:border-primary-400 hover:bg-primary-50/50 transition-all duration-300 group">
+                            <div class="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                                <svg class="w-10 h-10 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                </svg>
+                            </div>
+                            <p class="text-xl font-medium mb-2 text-gray-800">Drag & drop files here</p>
+                            <p class="text-gray-500 mb-4">or</p>
+                            <label for="file-input" class="px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-500 text-white font-medium rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 cursor-pointer flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Browse Files
+                            </label>
+                            <input type="file" id="file-input" class="hidden" multiple>
+                            <p class="mt-6 text-xs text-gray-400">Maximum file size: Limited only by your device's memory</p>
+                        </div>
+
+                        <div id="file-info" class="hidden bg-gray-50 rounded-xl p-5 mb-8 border border-gray-100">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mr-4">
+                                        <svg class="w-6 h-6 text-primary-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 id="file-name" class="font-medium text-left text-gray-800"></h3>
+                                        <p id="file-size" class="text-sm text-gray-500 text-left"></p>
+                                    </div>
+                                </div>
+                                <button id="clear-file" class="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button id="generate-link" class="w-full py-4 bg-gradient-to-r from-primary-600 to-primary-500 text-white font-medium rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"></path>
+                            </svg>
+                            Generate Sharing Link
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+            <div id="connection-info" class="hidden max-w-2xl mx-auto bg-white rounded-2xl shadow-soft p-8 md:p-10 relative overflow-hidden border border-gray-100 backdrop-blur-sm my-10">
+                <!-- Decorative elements -->
+                <div class="absolute top-0 right-0 w-40 h-40 bg-primary-50 rounded-bl-full -z-10 opacity-70"></div>
+                <div class="absolute bottom-0 left-0 w-40 h-40 bg-secondary-50 rounded-tr-full -z-10 opacity-70"></div>
+
+                <!-- Success badge -->
+                <div class="absolute top-4 right-4 bg-blue-50 px-3 py-1 rounded-full text-blue-700 text-xs font-medium flex items-center">
+                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
+                    Ready to Share
+                </div>
+
+                <div class="flex items-center mb-6">
+                    <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mr-4">
+                        <svg class="w-6 h-6 text-primary-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold">Share with Your Peer</h3>
+                        <p class="text-gray-600">Send this link or QR code to the person you want to share with</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-xl mb-8 border border-gray-100">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Sharing Link</label>
+                    <div class="flex">
+                        <input id="share-link" type="text" class="flex-grow px-4 py-3 border border-gray-300 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-primary-500 font-mono text-sm bg-white" readonly>
+                        <button id="copy-link" class="px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-r-xl hover:shadow-md transition-all flex items-center">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path>
+                                <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"></path>
                             </svg>
                         </button>
                     </div>
                 </div>
-                
-                <button id="generate-link" class="w-full py-3 bg-primary text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                    Generate Sharing Link
-                </button>
+
+                <div class="flex flex-col md:flex-row gap-8 items-center mb-8">
+                    <div class="text-center bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex-1">
+                        <p class="mb-4 font-medium text-gray-700">Scan QR Code</p>
+                        <div id="qrcode" class="inline-block p-4 bg-white rounded-xl border border-gray-200"></div>
+                    </div>
+
+                    <div class="flex-1 text-center md:text-left">
+                        <h4 class="font-medium text-lg mb-2">Instructions:</h4>
+                        <ol class="text-gray-600 space-y-2 list-decimal list-inside">
+                            <li>Share this link with your recipient</li>
+                            <li>Keep this page open</li>
+                            <li>Wait for them to connect</li>
+                            <li>Transfer will start automatically</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div id="connection-status" class="bg-gray-50 p-6 rounded-xl border border-gray-100">
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="w-3 h-3 bg-yellow-400 rounded-full mr-2 animate-pulse"></div>
+                        <p class="font-medium text-gray-700">Waiting for peer to connect...</p>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                        <div id="progress-bar" class="bg-gradient-to-r from-primary-600 to-primary-500 h-3 rounded-full w-0 transition-all duration-300 shadow-inner"></div>
+                    </div>
+                </div>
             </div>
-            
-            <div id="connection-info" class="hidden max-w-xl mx-auto bg-white rounded-lg shadow-lg p-6">
-                <h3 class="text-xl font-bold mb-4">Share this link with your peer</h3>
-                <div class="flex mb-6">
-                    <input id="share-link" type="text" class="flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary" readonly>
-                    <button id="copy-link" class="px-4 py-2 bg-primary text-white rounded-r-lg hover:bg-blue-600 transition-colors">
-                        Copy
+
+            <div id="receiver-info" class="hidden max-w-2xl mx-auto bg-white rounded-2xl shadow-soft p-8 md:p-10 relative overflow-hidden border border-gray-100 backdrop-blur-sm my-10">
+                <!-- Decorative elements -->
+                <div class="absolute top-0 right-0 w-40 h-40 bg-primary-50 rounded-bl-full -z-10 opacity-70"></div>
+                <div class="absolute bottom-0 left-0 w-40 h-40 bg-secondary-50 rounded-tr-full -z-10 opacity-70"></div>
+
+                <!-- Receiving badge -->
+                <div class="absolute top-4 right-4 bg-secondary-50 px-3 py-1 rounded-full text-secondary-700 text-xs font-medium flex items-center">
+                    <svg class="w-3 h-3 mr-1 animate-pulse" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                    Receiving File
+                </div>
+
+                <div class="flex items-center mb-8">
+                    <div class="w-12 h-12 bg-secondary-100 rounded-full flex items-center justify-center mr-4">
+                        <svg class="w-6 h-6 text-secondary-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold">Receiving File</h3>
+                        <p class="text-gray-600">The file is being transferred directly to your device</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-xl p-6 mb-8 border border-gray-100">
+                    <h4 class="font-medium text-gray-700 mb-4">File Information</h4>
+                    <div id="receiver-file-info" class="flex items-center">
+                        <div class="w-14 h-14 bg-secondary-100 rounded-lg flex items-center justify-center mr-4">
+                            <svg class="w-8 h-8 text-secondary-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div class="text-left">
+                            <p id="receiver-file-name" class="font-medium text-lg"></p>
+                            <p id="receiver-file-size" class="text-sm text-gray-500"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="receiver-status" class="bg-gray-50 p-6 rounded-xl border border-gray-100 mb-8">
+                    <div class="flex items-center justify-center mb-4">
+                        <svg class="animate-spin h-5 w-5 text-secondary-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <p class="font-medium text-gray-700">Receiving file...</p>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                        <div id="receiver-progress-bar" class="bg-gradient-to-r from-secondary-600 to-secondary-500 h-3 rounded-full w-0 transition-all duration-300 shadow-inner"></div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <p class="text-sm text-gray-500 mb-4">The file will be available for download once the transfer is complete</p>
+                    <button id="download-file" class="hidden px-8 py-4 bg-gradient-to-r from-secondary-600 to-secondary-500 text-white font-medium rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 mx-auto">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                        Download File
                     </button>
                 </div>
-                
-                <div class="text-center">
-                    <p class="mb-2">Or scan this QR code</p>
-                    <div id="qrcode" class="inline-block p-4 bg-white rounded-lg"></div>
-                </div>
-                
-                <div id="connection-status" class="mt-6 text-center">
-                    <p>Waiting for peer to connect...</p>
-                    <div class="mt-2 w-full bg-gray-200 rounded-full h-2.5">
-                        <div id="progress-bar" class="bg-primary h-2.5 rounded-full w-0 transition-all duration-300"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="receiver-info" class="hidden max-w-xl mx-auto bg-white rounded-lg shadow-lg p-6">
-                <h3 class="text-xl font-bold mb-4">Receiving File</h3>
-                <div id="receiver-file-info" class="mb-6">
-                    <p id="receiver-file-name" class="font-medium"></p>
-                    <p id="receiver-file-size" class="text-sm text-gray-500"></p>
-                </div>
-                
-                <div id="receiver-status" class="mt-6 text-center">
-                    <p>Receiving file...</p>
-                    <div class="mt-2 w-full bg-gray-200 rounded-full h-2.5">
-                        <div id="receiver-progress-bar" class="bg-primary h-2.5 rounded-full w-0 transition-all duration-300"></div>
-                    </div>
-                </div>
-                
-                <button id="download-file" class="hidden w-full mt-6 py-3 bg-secondary text-white rounded-lg hover:bg-green-600 transition-colors">
-                    Download File
-                </button>
             </div>
         </section>
-        
+
         <!-- How It Works Section -->
-        <section id="how-it-works" class="bg-gray-50 py-16">
+        <section id="how-it-works" class="py-24 relative overflow-hidden">
+            <!-- Background decorations -->
+            <div class="absolute inset-0 bg-gradient-to-br from-primary-50 to-gray-50 -z-10"></div>
+            <div class="absolute inset-0 -z-10 opacity-10">
+                <div class="absolute top-1/4 left-1/4 w-96 h-96 border-2 border-primary-300 rounded-full"></div>
+                <div class="absolute bottom-1/4 right-1/4 w-64 h-64 border-2 border-secondary-300 rounded-full"></div>
+            </div>
+
             <div class="container mx-auto px-4">
-                <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mb-4">1</div>
-                        <h3 class="text-xl font-bold mb-2">Drop Your File</h3>
-                        <p>Select or drag & drop the file you want to share. Your file stays on your device.</p>
+                <div class="text-center mb-16">
+                    <div class="inline-block px-4 py-1 bg-primary-50 rounded-full text-primary-700 font-medium text-sm mb-4">
+                        <span class="flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                            </svg>
+                            Simple 3-Step Process
+                        </span>
                     </div>
-                    
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mb-4">2</div>
-                        <h3 class="text-xl font-bold mb-2">Share the Link</h3>
-                        <p>Generate a unique sharing link or QR code and send it to your recipient.</p>
+                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">How <span class="bg-gradient-to-r from-primary-600 to-primary-400 text-transparent bg-clip-text">PeerDrop</span> Works</h2>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">PeerDrop uses WebRTC technology to create a secure, direct connection between devices. No data is stored on our servers.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 max-w-6xl mx-auto">
+                    <div class="bg-white p-8 rounded-2xl shadow-soft relative overflow-hidden group hover:shadow-md transition-all duration-500 transform hover:-translate-y-2 border border-gray-50">
+                        <!-- Decorative elements -->
+                        <div class="absolute -top-10 -right-10 w-24 h-24 bg-primary-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-primary-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100"></div>
+
+                        <div class="relative z-10">
+                            <div class="w-16 h-16 bg-gradient-to-br from-primary-600 to-primary-400 text-white rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform duration-300">
+                                <span class="text-xl font-bold">1</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-4 group-hover:text-primary-600 transition-colors duration-300">Drop Your File</h3>
+                            <p class="text-gray-600">Select or drag & drop the file you want to share. Your file stays on your device until the recipient connects.</p>
+
+                            <!-- Icon illustration -->
+                            <div class="mt-6 text-primary-400 group-hover:text-primary-500 transition-colors duration-300">
+                                <svg class="w-10 h-10 mx-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mb-4">3</div>
-                        <h3 class="text-xl font-bold mb-2">Direct Transfer</h3>
-                        <p>When they open the link, a secure P2P connection is established for direct transfer.</p>
+
+                    <div class="bg-white p-8 rounded-2xl shadow-soft relative overflow-hidden group hover:shadow-md transition-all duration-500 transform hover:-translate-y-2 border border-gray-50">
+                        <!-- Decorative elements -->
+                        <div class="absolute -top-10 -right-10 w-24 h-24 bg-primary-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-primary-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100"></div>
+
+                        <div class="relative z-10">
+                            <div class="w-16 h-16 bg-gradient-to-br from-primary-600 to-primary-400 text-white rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform duration-300">
+                                <span class="text-xl font-bold">2</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-4 group-hover:text-primary-600 transition-colors duration-300">Share the Link</h3>
+                            <p class="text-gray-600">Generate a unique sharing link or QR code and send it to your recipient through any messaging app.</p>
+
+                            <!-- Icon illustration -->
+                            <div class="mt-6 text-primary-400 group-hover:text-primary-500 transition-colors duration-300">
+                                <svg class="w-10 h-10 mx-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-2xl shadow-soft relative overflow-hidden group hover:shadow-md transition-all duration-500 transform hover:-translate-y-2 border border-gray-50">
+                        <!-- Decorative elements -->
+                        <div class="absolute -top-10 -right-10 w-24 h-24 bg-primary-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-primary-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100"></div>
+
+                        <div class="relative z-10">
+                            <div class="w-16 h-16 bg-gradient-to-br from-primary-600 to-primary-400 text-white rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform duration-300">
+                                <span class="text-xl font-bold">3</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-4 group-hover:text-primary-600 transition-colors duration-300">Direct Transfer</h3>
+                            <p class="text-gray-600">When they open the link, a secure P2P connection is established for direct device-to-device transfer.</p>
+
+                            <!-- Icon illustration -->
+                            <div class="mt-6 text-primary-400 group-hover:text-primary-500 transition-colors duration-300">
+                                <svg class="w-10 h-10 mx-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-20 text-center">
+                    <div class="inline-block bg-green-50 rounded-xl px-8 py-4 text-green-800 font-medium shadow-sm border border-green-100">
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 mr-3 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Your data never leaves your device until it reaches your recipient</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
-        
+
         <!-- Features Section -->
-        <section id="features" class="py-16">
+        <section id="features" class="py-24 relative overflow-hidden">
+            <!-- Background decorations -->
+            <div class="absolute inset-0 bg-gradient-to-br from-gray-50 to-white -z-10"></div>
+            <div class="absolute inset-0 -z-10 opacity-5">
+                <div class="absolute top-1/3 right-1/3 w-96 h-96 border-2 border-primary-300 rounded-full"></div>
+                <div class="absolute bottom-1/3 left-1/3 w-64 h-64 border-2 border-secondary-300 rounded-full"></div>
+            </div>
+
             <div class="container mx-auto px-4">
-                <h2 class="text-3xl font-bold text-center mb-12">Why PeerDrop?</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="flex">
-                        <div class="mr-4 text-primary">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                <div class="text-center mb-16">
+                    <div class="inline-block px-4 py-1 bg-secondary-50 rounded-full text-secondary-700 font-medium text-sm mb-4">
+                        <span class="flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                             </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold mb-2">End-to-End Encrypted</h3>
-                            <p>All transfers are secured with WebRTC's built-in encryption. Your data never passes through our servers.</p>
+                            Premium Features, Completely Free
+                        </span>
+                    </div>
+                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">Why Choose <span class="bg-gradient-to-r from-secondary-600 to-secondary-400 text-transparent bg-clip-text">PeerDrop</span>?</h2>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">Our platform offers several advantages over traditional file sharing services</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12 max-w-6xl mx-auto">
+                    <!-- Feature 1 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-soft border border-gray-50 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 group">
+                        <div class="flex items-start">
+                            <div class="mr-6 bg-gradient-to-br from-primary-100 to-primary-50 p-4 rounded-xl group-hover:bg-primary-100 transition-colors duration-300">
+                                <svg class="w-10 h-10 text-primary-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold mb-3 group-hover:text-primary-600 transition-colors duration-300">End-to-End Encrypted</h3>
+                                <p class="text-gray-600 text-lg leading-relaxed">All transfers are secured with WebRTC's built-in encryption. Your data never passes through our servers, ensuring complete privacy.</p>
+                                <div class="mt-4 text-primary-600 font-medium flex items-center">
+                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    Maximum security
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="flex">
-                        <div class="mr-4 text-primary">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold mb-2">No Size Limits</h3>
-                            <p>Share files of any size, limited only by your device's memory and connection speed.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex">
-                        <div class="mr-4 text-primary">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold mb-2">No Waiting</h3>
-                            <p>No uploads to servers. No downloads from servers. Just direct device-to-device transfer.</p>
+
+                    <!-- Feature 2 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-soft border border-gray-50 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 group">
+                        <div class="flex items-start">
+                            <div class="mr-6 bg-gradient-to-br from-primary-100 to-primary-50 p-4 rounded-xl group-hover:bg-primary-100 transition-colors duration-300">
+                                <svg class="w-10 h-10 text-primary-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold mb-3 group-hover:text-primary-600 transition-colors duration-300">No Size Limits</h3>
+                                <p class="text-gray-600 text-lg leading-relaxed">Share files of any size, limited only by your device's memory and connection speed. Perfect for large videos, design files, and more.</p>
+                                <div class="mt-4 text-primary-600 font-medium flex items-center">
+                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    Transfer gigabytes with ease
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="flex">
-                        <div class="mr-4 text-primary">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold mb-2">Cross-Platform</h3>
-                            <p>Works on any modern browser. Share between mobile and desktop, Windows and Mac, iOS and Android.</p>
+
+                    <!-- Feature 3 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-soft border border-gray-50 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 group">
+                        <div class="flex items-start">
+                            <div class="mr-6 bg-gradient-to-br from-primary-100 to-primary-50 p-4 rounded-xl group-hover:bg-primary-100 transition-colors duration-300">
+                                <svg class="w-10 h-10 text-primary-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold mb-3 group-hover:text-primary-600 transition-colors duration-300">No Waiting</h3>
+                                <p class="text-gray-600 text-lg leading-relaxed">No uploads to servers. No downloads from servers. Just direct device-to-device transfer at the maximum speed your connection allows.</p>
+                                <div class="mt-4 text-primary-600 font-medium flex items-center">
+                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    Instant transfers
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Feature 4 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-soft border border-gray-50 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 group">
+                        <div class="flex items-start">
+                            <div class="mr-6 bg-gradient-to-br from-primary-100 to-primary-50 p-4 rounded-xl group-hover:bg-primary-100 transition-colors duration-300">
+                                <svg class="w-10 h-10 text-primary-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold mb-3 group-hover:text-primary-600 transition-colors duration-300">Cross-Platform</h3>
+                                <p class="text-gray-600 text-lg leading-relaxed">Works on any modern browser. Share between mobile and desktop, Windows and Mac, iOS and Android without any compatibility issues.</p>
+                                <div class="mt-4 text-primary-600 font-medium flex items-center">
+                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    Universal compatibility
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-20 text-center">
+                    <a href="#file-sharing" class="inline-block px-10 py-5 bg-gradient-to-r from-primary-600 to-primary-500 text-white text-lg font-medium rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 group">
+                        <span class="flex items-center">
+                            Start Sharing Now
+                            <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                            </svg>
+                        </span>
+                    </a>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="bg-dark text-white py-10">
+    <footer class="bg-gradient-to-br from-dark to-gray-900 text-white py-20 relative overflow-hidden">
+        <!-- Decorative elements -->
+        <div class="absolute inset-0 -z-10 opacity-10">
+            <div class="absolute top-0 left-1/4 w-96 h-96 bg-primary-900 rounded-full blur-3xl opacity-20"></div>
+            <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary-900 rounded-full blur-3xl opacity-20"></div>
+        </div>
+
         <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
+                <div class="md:col-span-5">
                     <div class="flex items-center">
-                        <svg class="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"></path>
-                        </svg>
-                        <h2 class="ml-2 text-xl font-bold">PeerDrop</h2>
+                        <div class="bg-gradient-to-br from-primary-600 via-primary-500 to-primary-400 rounded-full p-2.5 shadow-md">
+                            <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <h2 class="ml-3 text-2xl font-bold bg-gradient-to-r from-primary-400 to-primary-200 text-transparent bg-clip-text">PeerDrop</h2>
                     </div>
-                    <p class="mt-2 text-gray-400">A privacy-focused, peer-to-peer file sharing app.</p>
+                    <p class="mt-4 text-gray-400 max-w-md leading-relaxed">A privacy-focused, peer-to-peer file sharing app. Share files directly between devices with end-to-end encryption. No servers, no storage, no limits.</p>
+
+                    <div class="mt-6 flex space-x-4">
+                        <a href="https://github.com/yourusername/peerdrop" target="_blank" class="text-gray-400 hover:text-white transition-colors p-2 bg-gray-800 rounded-full hover:bg-gray-700">
+                            <span class="sr-only">GitHub</span>
+                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors p-2 bg-gray-800 rounded-full hover:bg-gray-700">
+                            <span class="sr-only">Twitter</span>
+                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
-                
-                <div>
-                    <ul class="flex space-x-6">
-                        <li><a href="#how-it-works" class="hover:text-primary transition-colors">How It Works</a></li>
-                        <li><a href="#features" class="hover:text-primary transition-colors">Features</a></li>
-                        <li><a href="https://github.com/yourusername/peerdrop" target="_blank" class="hover:text-primary transition-colors">GitHub</a></li>
+
+                <div class="md:col-span-3">
+                    <h3 class="text-lg font-semibold mb-4 text-gray-200">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#how-it-works" class="text-gray-400 hover:text-primary-300 transition-colors flex items-center group">
+                            <span class="w-1.5 h-1.5 bg-primary-500 rounded-full mr-2 transform scale-0 group-hover:scale-100 transition-transform"></span>
+                            How It Works
+                        </a></li>
+                        <li><a href="#features" class="text-gray-400 hover:text-primary-300 transition-colors flex items-center group">
+                            <span class="w-1.5 h-1.5 bg-primary-500 rounded-full mr-2 transform scale-0 group-hover:scale-100 transition-transform"></span>
+                            Features
+                        </a></li>
+                        <li><a href="#file-sharing" class="text-gray-400 hover:text-primary-300 transition-colors flex items-center group">
+                            <span class="w-1.5 h-1.5 bg-primary-500 rounded-full mr-2 transform scale-0 group-hover:scale-100 transition-transform"></span>
+                            Start Sharing
+                        </a></li>
+                        <li><a href="https://github.com/yourusername/peerdrop" target="_blank" class="text-gray-400 hover:text-primary-300 transition-colors flex items-center group">
+                            <span class="w-1.5 h-1.5 bg-primary-500 rounded-full mr-2 transform scale-0 group-hover:scale-100 transition-transform"></span>
+                            GitHub
+                        </a></li>
                     </ul>
                 </div>
+
+                <div class="md:col-span-4">
+                    <h3 class="text-lg font-semibold mb-4 text-gray-200">About PeerDrop</h3>
+                    <p class="text-gray-400 mb-4 leading-relaxed">PeerDrop is an open-source project that enables secure, direct file sharing between devices using WebRTC technology.</p>
+                    <div class="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                        <div class="flex items-center text-gray-300 mb-2">
+                            <svg class="w-5 h-5 mr-2 text-primary-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="font-medium">Privacy First</span>
+                        </div>
+                        <p class="text-gray-400 text-sm">Your files never touch our servers. All transfers are end-to-end encrypted.</p>
+                    </div>
+                </div>
             </div>
-            
-            <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
+
+            <div class="pt-8 border-t border-gray-800 text-center text-gray-400">
                 <p>&copy; 2023 PeerDrop. All rights reserved.</p>
-                <p class="mt-2">Built with WebRTC and ❤️</p>
+                <p class="mt-2 flex items-center justify-center">
+                    <span>Built with</span>
+                    <svg class="w-5 h-5 mx-1 text-red-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span>and WebRTC</span>
+                </p>
             </div>
         </div>
     </footer>

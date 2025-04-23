@@ -1,0 +1,25 @@
+{
+  "name": "peerdrop",
+  "version": "1.0.0",
+  "description": "A privacy-focused, peer-to-peer file sharing app",
+  "main": "workers-site/index.js",
+  "scripts": {
+    "build": "npm run build:css",
+    "deploy": "wrangler publish"
+  },
+  "build": {
+    "command": "npm run build",
+    "output_directory": "src",
+    "root_directory": "."
+  },
+  "routes": [
+    {
+      "pattern": "/socket.io/*",
+      "script": "workers-site/index.js"
+    },
+    {
+      "pattern": "/*",
+      "script": "workers-site/index.js"
+    }
+  ]
+}

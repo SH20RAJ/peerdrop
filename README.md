@@ -33,11 +33,12 @@ PeerDrop lets you share large files **directly between devices** using WebRTC. N
 
 ## 🏗️ Project Structure
 
-```
+```bash
 peerdrop/
 ├── public/                # Static assets (icons, favicon, etc.)
 ├── src/
 │   ├── index.html         # Entry HTML
+│   ├── 404.html           # 404 error page
 │   ├── styles/            # CSS styles
 │   │   └── main.css       # Tailwind CSS
 │   └── js/                # JavaScript files
@@ -45,6 +46,10 @@ peerdrop/
 ├── server/
 │   ├── index.js           # Express + Socket.io Signaling Server
 │   └── config.js          # TURN/STUN configs
+├── workers-site/          # Cloudflare Workers configuration
+│   ├── index.js           # Worker script
+│   └── package.json       # Worker dependencies
+├── wrangler.toml          # Cloudflare Wrangler config
 ├── README.md
 └── package.json
 ```
@@ -72,16 +77,79 @@ npm start
 npm run dev
 ```
 
-Then open http://localhost:3000 in your browser.
+Then open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🌐 Deployment
 
-- Frontend & Backend: Deploy to Vercel, Netlify, Heroku, or any Node.js hosting service
+### Cloudflare Pages Deployment
+
+#### Method 1: Using Wrangler CLI
+
+1\. Install Wrangler CLI:
+
+```bash
+npm install -g @cloudflare/wrangler
+```
+
+2\. Authenticate with Cloudflare:
+
+```bash
+wrangler login
+```
+
+3\. Update your Cloudflare account details in `wrangler.toml`:
+
+```toml
+account_id = "your-account-id" # Replace with your Cloudflare account ID
+zone_id = "your-zone-id"       # Replace with your Cloudflare zone ID (if applicable)
+```
+
+4\. Build the project:
+
+```bash
+npm run build
+```
+
+5\. Deploy to Cloudflare Pages:
+
+```bash
+npm run deploy
+```
+
+#### Method 2: Using Cloudflare Dashboard
+
+1\. Build the project:
+
+```bash
+npm run build
+```
+
+2\. Go to the [Cloudflare Pages dashboard](https://dash.cloudflare.com/?to=/:account/pages)
+
+3\. Click "Create a project"
+
+4\. Connect your GitHub repository
+
+5\. Configure your build settings:
+
+- Build command: `npm run build`
+- Build output directory: `src`
+- Root directory: `/`
+
+6\. Click "Save and Deploy"
+
+### Signaling Server Deployment
+
+The signaling server needs to be deployed separately:
+
+- Deploy the server directory to a Node.js hosting service like Heroku, Render, or Railway
+- Update the `signalingServerUrl` in `workers-site/index.js` to point to your deployed signaling server
 - For production, consider setting up a dedicated TURN server for better NAT traversal
 
 ## 🤝 Contributing
 
 Contributions are welcome! If you want to:
+
 - Improve UI
 - Add QR scan support
 - Make a desktop/mobile app version

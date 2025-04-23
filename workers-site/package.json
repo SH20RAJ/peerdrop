@@ -1,0 +1,11 @@
+{
+  "name": "peerdrop-worker",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker for PeerDrop",
+  "main": "index.js",
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@cloudflare/kv-asset-handler": "^0.3.0"
+  }
+}
