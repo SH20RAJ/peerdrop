@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeerDrop - Secure P2P File Sharing</title>
+    <meta name="description" content="A privacy-focused, peer-to-peer file sharing app — fast, secure, and serverless.">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-light font-sans text-dark">
+    <header class="container mx-auto px-4 py-6 flex justify-between items-center">
+        <div class="flex items-center">
+            <svg class="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"></path>
+            </svg>
+            <h1 class="ml-2 text-2xl font-bold text-primary">PeerDrop</h1>
+        </div>
+        <nav>
+            <ul class="flex space-x-6">
+                <li><a href="#how-it-works" class="hover:text-primary transition-colors">How It Works</a></li>
+                <li><a href="#features" class="hover:text-primary transition-colors">Features</a></li>
+                <li><a href="https://github.com/yourusername/peerdrop" target="_blank" class="hover:text-primary transition-colors">GitHub</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="container mx-auto px-4 py-16 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6">Secure P2P File Sharing</h2>
+            <p class="text-xl mb-10 max-w-2xl mx-auto">Share files directly between devices with end-to-end encryption. No servers, no storage, no limits.</p>
+            
+            <div class="max-w-xl mx-auto bg-white rounded-lg shadow-lg p-6 mb-10">
+                <div id="drop-area" class="border-2 border-dashed border-gray-300 rounded-lg p-10 mb-6 flex flex-col items-center justify-center cursor-pointer hover:border-primary transition-colors">
+                    <svg class="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                    </svg>
+                    <p class="text-lg mb-2">Drag & drop files here</p>
+                    <p class="text-sm text-gray-500">or</p>
+                    <label for="file-input" class="mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer">
+                        Browse Files
+                    </label>
+                    <input type="file" id="file-input" class="hidden" multiple>
+                </div>
+                
+                <div id="file-info" class="hidden">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 id="file-name" class="font-medium"></h3>
+                            <p id="file-size" class="text-sm text-gray-500"></p>
+                        </div>
+                        <button id="clear-file" class="text-red-500 hover:text-red-700">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <button id="generate-link" class="w-full py-3 bg-primary text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    Generate Sharing Link
+                </button>
+            </div>
+            
+            <div id="connection-info" class="hidden max-w-xl mx-auto bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-bold mb-4">Share this link with your peer</h3>
+                <div class="flex mb-6">
+                    <input id="share-link" type="text" class="flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary" readonly>
+                    <button id="copy-link" class="px-4 py-2 bg-primary text-white rounded-r-lg hover:bg-blue-600 transition-colors">
+                        Copy
+                    </button>
+                </div>
+                
+                <div class="text-center">
+                    <p class="mb-2">Or scan this QR code</p>
+                    <div id="qrcode" class="inline-block p-4 bg-white rounded-lg"></div>
+                </div>
+                
+                <div id="connection-status" class="mt-6 text-center">
+                    <p>Waiting for peer to connect...</p>
+                    <div class="mt-2 w-full bg-gray-200 rounded-full h-2.5">
+                        <div id="progress-bar" class="bg-primary h-2.5 rounded-full w-0 transition-all duration-300"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="receiver-info" class="hidden max-w-xl mx-auto bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-bold mb-4">Receiving File</h3>
+                <div id="receiver-file-info" class="mb-6">
+                    <p id="receiver-file-name" class="font-medium"></p>
+                    <p id="receiver-file-size" class="text-sm text-gray-500"></p>
+                </div>
+                
+                <div id="receiver-status" class="mt-6 text-center">
+                    <p>Receiving file...</p>
+                    <div class="mt-2 w-full bg-gray-200 rounded-full h-2.5">
+                        <div id="receiver-progress-bar" class="bg-primary h-2.5 rounded-full w-0 transition-all duration-300"></div>
+                    </div>
+                </div>
+                
+                <button id="download-file" class="hidden w-full mt-6 py-3 bg-secondary text-white rounded-lg hover:bg-green-600 transition-colors">
+                    Download File
+                </button>
+            </div>
+        </section>
+        
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="bg-gray-50 py-16">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mb-4">1</div>
+                        <h3 class="text-xl font-bold mb-2">Drop Your File</h3>
+                        <p>Select or drag & drop the file you want to share. Your file stays on your device.</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mb-4">2</div>
+                        <h3 class="text-xl font-bold mb-2">Share the Link</h3>
+                        <p>Generate a unique sharing link or QR code and send it to your recipient.</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mb-4">3</div>
+                        <h3 class="text-xl font-bold mb-2">Direct Transfer</h3>
+                        <p>When they open the link, a secure P2P connection is established for direct transfer.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Features Section -->
+        <section id="features" class="py-16">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-12">Why PeerDrop?</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="flex">
+                        <div class="mr-4 text-primary">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">End-to-End Encrypted</h3>
+                            <p>All transfers are secured with WebRTC's built-in encryption. Your data never passes through our servers.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex">
+                        <div class="mr-4 text-primary">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">No Size Limits</h3>
+                            <p>Share files of any size, limited only by your device's memory and connection speed.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex">
+                        <div class="mr-4 text-primary">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">No Waiting</h3>
+                            <p>No uploads to servers. No downloads from servers. Just direct device-to-device transfer.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex">
+                        <div class="mr-4 text-primary">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">Cross-Platform</h3>
+                            <p>Works on any modern browser. Share between mobile and desktop, Windows and Mac, iOS and Android.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-dark text-white py-10">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center">
+                        <svg class="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                        <h2 class="ml-2 text-xl font-bold">PeerDrop</h2>
+                    </div>
+                    <p class="mt-2 text-gray-400">A privacy-focused, peer-to-peer file sharing app.</p>
+                </div>
+                
+                <div>
+                    <ul class="flex space-x-6">
+                        <li><a href="#how-it-works" class="hover:text-primary transition-colors">How It Works</a></li>
+                        <li><a href="#features" class="hover:text-primary transition-colors">Features</a></li>
+                        <li><a href="https://github.com/yourusername/peerdrop" target="_blank" class="hover:text-primary transition-colors">GitHub</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
+                <p>&copy; 2023 PeerDrop. All rights reserved.</p>
+                <p class="mt-2">Built with WebRTC and ❤️</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
