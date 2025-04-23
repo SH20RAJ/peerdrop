@@ -11,7 +11,7 @@ if (!fs.existsSync(outputDir)) {
 // Run Tailwind CLI to build the CSS
 try {
     console.log('Building Tailwind CSS...');
-    execSync('npx tailwindcss -i ./src/styles/main.css -o ./src/styles/main.css --minify');
+    execSync('npx tailwindcss -i ./src/styles/input.css -o ./src/styles/main.css --minify');
     console.log('Tailwind CSS built successfully!');
 } catch (error) {
     console.error('Error building Tailwind CSS:', error.message);

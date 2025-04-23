@@ -64,7 +64,7 @@ peerdrop/
 
 ```bash
 # Clone the repo
-git clone https://github.com/yourusername/peerdrop.git
+git clone https://github.com/sh20raj/peerdrop.git
 
 # Install dependencies
 cd peerdrop
