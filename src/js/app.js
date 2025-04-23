@@ -47,103 +47,146 @@ let receivedSize = 0;
 let fileSize = 0;
 let chunkSize = 16384; // 16KB chunks
 
-// Connect to signaling server
+// Connect to signaling server using WebSockets
 function connectToSignalingServer() {
-    socket = io();
+    // Generate a random room ID if not joining an existing room
+    if (!roomId) {
+        roomId = generateRoomId();
+    }
 
-    socket.on('connect', () => {
+    // Connect to the signaling server using WebSockets
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${wsProtocol}//${window.location.host}/signal/${roomId}`;
+
+    socket = new WebSocket(wsUrl);
+
+    socket.onopen = () => {
         console.log('Connected to signaling server');
-    });
+    };
 
-    socket.on('created', (room) => {
-        console.log('Created room', room);
-        roomId = room;
-        isInitiator = true;
+    socket.onmessage = (event) => {
+        const message = JSON.parse(event.data);
+        console.log('Received message:', message);
 
-        // Generate and display sharing link
-        const shareUrl = `${window.location.origin}?room=${roomId}`;
-        shareLink.value = shareUrl;
+        switch (message.type) {
+            case 'connected':
+                console.log('Connected to signaling server with session ID:', message.sessionId);
+                break;
 
-        // Generate QR code
-        QRCode.toCanvas(qrcodeDiv, shareUrl, { width: 200 }, (error) => {
-            if (error) console.error(error);
-        });
+            case 'created':
+                console.log('Created room', message.roomId);
+                roomId = message.roomId;
+                isInitiator = true;
 
-        // Hide loading and show connection info
-        hideLoading();
-        connectionInfo.classList.remove('hidden');
-        connectionInfo.classList.add('fade-in');
-    });
+                // Generate and display sharing link
+                const shareUrl = `${window.location.origin}?room=${roomId}`;
+                shareLink.value = shareUrl;
 
-    socket.on('joined', (room) => {
-        console.log('Joined room', room);
-        roomId = room;
-        isInitiator = false;
+                // Generate QR code
+                QRCode.toCanvas(qrcodeDiv, shareUrl, { width: 200 }, (error) => {
+                    if (error) console.error(error);
+                });
 
-        // Hide loading and show receiver info
-        hideLoading();
-        receiverInfo.classList.remove('hidden');
-        receiverInfo.classList.add('fade-in');
+                // Hide loading and show connection info
+                hideLoading();
+                connectionInfo.classList.remove('hidden');
+                connectionInfo.classList.add('fade-in');
+                break;
 
-        // Create peer connection as the joining peer
-        createPeerConnection();
-    });
+            case 'joined':
+                console.log('Joined room', message.roomId);
+                roomId = message.roomId;
+                isInitiator = false;
 
-    socket.on('full', (room) => {
-        hideLoading();
-        alert(`Room ${room} is full. Please try again later.`);
-    });
+                // Hide loading and show receiver info
+                hideLoading();
+                receiverInfo.classList.remove('hidden');
+                receiverInfo.classList.add('fade-in');
 
-    socket.on('error', (error) => {
-        hideLoading();
-        alert(`Error: ${error.message}`);
-    });
+                // Create peer connection as the joining peer
+                createPeerConnection();
+                break;
 
-    socket.on('ready', () => {
-        console.log('Peer joined, creating connection...');
-        if (isInitiator) {
-            createPeerConnection();
+            case 'full':
+                hideLoading();
+                alert(`Room ${message.roomId} is full. Please try again later.`);
+                break;
+
+            case 'ready':
+                console.log('Peer joined, creating connection...');
+                if (isInitiator) {
+                    createPeerConnection();
+                }
+                break;
+
+            case 'offer':
+                if (!isInitiator && peerConnection) {
+                    peerConnection.setRemoteDescription(new RTCSessionDescription(message.sdp))
+                        .then(() => {
+                            console.log('Setting remote description from offer');
+                            return peerConnection.createAnswer();
+                        })
+                        .then(answer => {
+                            console.log('Creating answer');
+                            return peerConnection.setLocalDescription(answer);
+                        })
+                        .then(() => {
+                            console.log('Sending answer');
+                            socket.send(JSON.stringify({
+                                type: 'answer',
+                                sdp: peerConnection.localDescription,
+                                roomId: roomId
+                            }));
+                        })
+                        .catch(error => console.error('Error handling offer:', error));
+                }
+                break;
+
+            case 'answer':
+                if (isInitiator && peerConnection) {
+                    console.log('Setting remote description from answer');
+                    peerConnection.setRemoteDescription(new RTCSessionDescription(message.sdp))
+                        .catch(error => console.error('Error setting remote description:', error));
+                }
+                break;
+
+            case 'candidate':
+                if (peerConnection) {
+                    console.log('Adding ICE candidate');
+                    peerConnection.addIceCandidate(new RTCIceCandidate(message.candidate))
+                        .catch(error => console.error('Error adding ICE candidate:', error));
+                }
+                break;
+
+            case 'disconnected':
+                console.log('Peer disconnected');
+                // Handle peer disconnection
+                break;
+
+            default:
+                console.warn('Unknown message type:', message.type);
         }
-    });
+    };
 
-    socket.on('offer', (description) => {
-        if (!isInitiator) {
-            peerConnection.setRemoteDescription(new RTCSessionDescription(description))
-                .then(() => {
-                    console.log('Setting remote description from offer');
-                    return peerConnection.createAnswer();
-                })
-                .then(answer => {
-                    console.log('Creating answer');
-                    return peerConnection.setLocalDescription(answer);
-                })
-                .then(() => {
-                    console.log('Sending answer');
-                    socket.emit('answer', peerConnection.localDescription, roomId);
-                })
-                .catch(error => console.error('Error handling offer:', error));
-        }
-    });
-
-    socket.on('answer', (description) => {
-        if (isInitiator) {
-            console.log('Setting remote description from answer');
-            peerConnection.setRemoteDescription(new RTCSessionDescription(description))
-                .catch(error => console.error('Error setting remote description:', error));
-        }
-    });
-
-    socket.on('candidate', (candidate) => {
-        if (peerConnection) {
-            console.log('Adding ICE candidate');
-            peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
-                .catch(error => console.error('Error adding ICE candidate:', error));
-        }
-    });
-
-    socket.on('disconnect', () => {
+    socket.onclose = () => {
         console.log('Disconnected from signaling server');
-    });
+    };
+
+    socket.onerror = (error) => {
+        console.error('WebSocket error:', error);
+        hideLoading();
+        alert('Error connecting to signaling server. Please try again later.');
+    };
+}
+
+// Generate a random room ID
+function generateRoomId() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 8; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
 }
 
 // Create WebRTC peer connection
@@ -161,7 +204,11 @@ function createPeerConnection() {
     peerConnection.onicecandidate = event => {
         if (event.candidate) {
             console.log('Sending ICE candidate');
-            socket.emit('candidate', event.candidate, roomId);
+            socket.send(JSON.stringify({
+                type: 'candidate',
+                candidate: event.candidate,
+                roomId: roomId
+            }));
         }
     };
 
@@ -218,7 +265,11 @@ function createPeerConnection() {
             })
             .then(() => {
                 console.log('Sending offer');
-                socket.emit('offer', peerConnection.localDescription, roomId);
+                socket.send(JSON.stringify({
+                    type: 'offer',
+                    sdp: peerConnection.localDescription,
+                    roomId: roomId
+                }));
             })
             .catch(error => console.error('Error creating offer:', error));
     } else {
@@ -391,13 +442,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const room = urlParams.get('room');
 
-    // Connect to signaling server
-    connectToSignalingServer();
-
     if (room) {
         // We're joining an existing room
         showLoading();
-        socket.emit('join', room);
+        roomId = room;
+
+        // Connect to signaling server with the room ID
+        connectToSignalingServer();
 
         // Hide loading after a timeout if something goes wrong
         setTimeout(() => {
@@ -476,7 +527,8 @@ document.addEventListener('DOMContentLoaded', () => {
     generateLinkBtn.addEventListener('click', () => {
         if (selectedFile) {
             showLoading();
-            socket.emit('create');
+            // Connect to signaling server to create a new room
+            connectToSignalingServer();
 
             // Hide loading after a timeout if something goes wrong
             setTimeout(() => {

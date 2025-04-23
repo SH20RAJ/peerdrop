@@ -1,17 +1,26 @@
 name = "peerdrop"
-type = "webpack"
+main = "workers-site/index.js"
+compatibility_date = "2023-04-23"
+
+# Replace with your actual Cloudflare account ID
 account_id = "your-account-id"
-workers_dev = true
 
 [site]
 bucket = "./src"
-entry-point = "workers-site"
 
 [build]
 command = "npm run build"
-upload.format = "service-worker"
+
+# Durable Objects configuration
+[[durable_objects.bindings]]
+name = "ROOMS"
+class_name = "RoomDurableObject"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["RoomDurableObject"]
 
 [env.production]
 name = "peerdrop"
-route = "peerdrop.pages.dev/*"
-zone_id = "your-zone-id"
+route = "peerdrop.pages.dev/*" # Replace with your custom domain if you have one
+zone_id = "your-zone-id" # Replace with your zone ID if using a custom domain

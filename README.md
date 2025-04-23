@@ -85,16 +85,16 @@ Then open [http://localhost:3000](http://localhost:3000) in your browser.
 
 #### Method 1: Using Wrangler CLI
 
-1\. Install Wrangler CLI:
+1\. Install dependencies:
 
 ```bash
-npm install -g @cloudflare/wrangler
+npm install
 ```
 
 2\. Authenticate with Cloudflare:
 
 ```bash
-wrangler login
+npx wrangler login
 ```
 
 3\. Update your Cloudflare account details in `wrangler.toml`:
@@ -110,10 +110,10 @@ zone_id = "your-zone-id"       # Replace with your Cloudflare zone ID (if applic
 npm run build
 ```
 
-5\. Deploy to Cloudflare Pages:
+5\. Deploy to Cloudflare Workers:
 
 ```bash
-npm run deploy
+npx wrangler deploy
 ```
 
 #### Method 2: Using Cloudflare Dashboard
@@ -140,11 +140,25 @@ npm run build
 
 ### Signaling Server Deployment
 
-The signaling server needs to be deployed separately:
+With our updated implementation, the signaling server is now integrated into the Cloudflare Worker using Durable Objects for WebSocket support:
 
-- Deploy the server directory to a Node.js hosting service like Heroku, Render, or Railway
-- Update the `signalingServerUrl` in `workers-site/index.js` to point to your deployed signaling server
-- For production, consider setting up a dedicated TURN server for better NAT traversal
+1\. Make sure your Cloudflare account has access to Durable Objects (available on the Workers Paid plan)
+
+2\. Update your `wrangler.toml` with your Cloudflare account ID:
+
+```toml
+account_id = "your-account-id" # Replace with your Cloudflare account ID
+```
+
+3\. Deploy the worker with Durable Objects:
+
+```bash
+npx wrangler deploy
+```
+
+The Durable Objects migration will be automatically applied during deployment.
+
+4\. For production with high traffic, consider setting up a dedicated TURN server for better NAT traversal
 
 ## 🤝 Contributing
 

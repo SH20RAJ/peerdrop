@@ -5,7 +5,7 @@
   "main": "workers-site/index.js",
   "scripts": {
     "build": "npm run build:css",
-    "deploy": "wrangler publish"
+    "deploy": "wrangler deploy"
   },
   "build": {
     "command": "npm run build",
